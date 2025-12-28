@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="US Election - Reflections on political dynamics">
+    <title>US Election | Faizan</title>
+    <link rel="icon" type="image/jpeg" href="../icon.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .post-layout {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: var(--glow-border);
+        }
+
+        .post-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+        }
+
+        .post-container {
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: var(--space-lg) var(--space-md);
+            width: 100%;
+        }
+
+        .post-header {
+            margin-bottom: var(--space-lg);
+            text-align: center;
+        }
+
+        .post-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.3;
+            margin-bottom: var(--space-sm);
+        }
+
+        .post-content {
+            font-family: var(--font-serif);
+            color: var(--text-secondary);
+            font-size: var(--font-size-base);
+            line-height: 1.9;
+        }
+
+        .post-content h2 {
+            font-family: var(--font-serif);
+            font-size: var(--font-size-xl);
+            color: var(--text-primary);
+            margin-top: var(--space-lg);
+            margin-bottom: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .post-content h3 {
+            font-family: var(--font-serif);
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+            margin-top: var(--space-md);
+            margin-bottom: var(--space-xs);
+            font-weight: 500;
+        }
+
+        .post-content p {
+            margin-bottom: var(--space-md);
+        }
+
+        .post-content strong {
+            color: var(--text-primary);
+        }
+
+        .post-content em {
+            color: var(--text-muted);
+        }
+
+        .post-content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: var(--space-md) 0;
+        }
+
+        .post-content ol {
+            margin-bottom: var(--space-md);
+            padding-left: var(--space-md);
+        }
+
+        .post-content li {
+            margin-bottom: var(--space-xs);
+        }
+
+        .back-link,
+        .theme-btn {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color var(--transition-fast);
+            background: none;
+            border: 1px solid var(--border);
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+        }
+
+        .back-link:hover,
+        .theme-btn:hover {
+            color: var(--glow-color);
+            border-color: var(--glow-color);
+        }
+
+        .post-footer {
+            text-align: center;
+            padding: var(--space-md);
+        }
+
+        .post-footer a {
+            font-family: var(--font-mono);
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .post-footer a:hover {
+            color: var(--glow-color);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Glowing Border -->
+    <div class="glow-border"></div>
+
+    <!-- Pixel Grid -->
+    <div class="pixel-grid" id="pixel-grid"></div>
+
+    <!-- Post Layout -->
+    <div class="post-layout">
+        <!-- Navigation -->
+        <nav class="post-nav">
+            <a href="../index.html" class="back-link">← Back</a>
+            <button class="theme-btn" id="theme-toggle">Theme</button>
+        </nav>
+
+        <!-- Post Content -->
+        <article class="post-container">
+            <header class="post-header">
+                <h1 class="post-title">US Election</h1>
+            </header>
+
+            <div class="post-content">
+                <p><em>This piece was reviewed with the assistance of AI for grammar, spelling, and punctuation
+                        corrections to ensure clarity and readability. The core content remains unchanged and reflects
+                        my original analysis.</em></p>
+
+                <hr>
+
+                <p>As a spectator of the U.S. election, I observed candidate rallies and followed the opinions, trends,
+                    and predictions of political commentators from across the political spectrum — right-leaning,
+                    left-leaning, and neutral.</p>
+
+                <p>After the results came out, numerous reasons for Trump's victory are being discussed. This article
+                    doesn't aim to list those common reasons or present new insights.</p>
+
+                <p>However, as a naive political enthusiast, I wanted to reflect on all elections in general at a more
+                    fundamental level and share my thoughts.</p>
+
+                <h2>Establishing some prerequisites</h2>
+
+                <p>I will first define some basic terms and then explore them with the help of simple examples with
+                    respect to politics.</p>
+
+                <p><strong>Issue</strong> = Manageable situations that require monitoring and gradual long-term planning
+                    and steady action.</p>
+
+                <p><strong>Problem</strong> = Crisis situations that need immediate action to prevent harm or chaos.</p>
+
+                <p>These terms play a major role in shaping political campaigns targeting different voter groups.</p>
+
+                <p>Consider a simplified scenario: a country heading into an election with two major agendas —
+                    immigration and inflation.</p>
+
+                <p>Using these prerequisites, we can explore the Voter Dynamics in detail.</p>
+
+                <h2>Voter Dynamics</h2>
+
+                <p>I have divided a particular front's voter base into 2 parts and now we will discuss them with the
+                    help of examples of inflation and immigration.</p>
+
+                <h3>Ideological Voters</h3>
+
+                <p>A voter who is often willing to ignore the problems at hand as long as the candidate focuses on the
+                    issues he cares about.</p>
+
+                <p>For example, this voter may even ignore the inflation problem as long as the party addresses the
+                    immigration issue which he connects at a more emotional and deeper level. Often these are the loyal
+                    voters of a party. Very minimal work is required to convert this voter base into actual votes.</p>
+
+                <h3>Non-ideological Voters</h3>
+
+                <p>A voter who is willing to keep aside his personal ideological aspirations if the critical problems at
+                    hand are promised to be dealt promptly.</p>
+
+                <p>I have divided this group further into two subcategories:</p>
+
+                <ol>
+                    <li><strong>Objective Voters:</strong> They don't align with any ideology. They assess each election
+                        independently and vote based purely on merit.</li>
+                    <li><strong>Swing Leaners:</strong> They may temporarily align with a particular ideology, swayed by
+                        specific issues or emotional appeals.</li>
+                </ol>
+
+                <h2>The Election Strategy</h2>
+
+                <p>The core strategy, in my view, is to transform a complex issue into an immediate problem, appealing
+                    to Swing Leaners. Political campaigns often tap into emotions like anger or fear (powerful
+                    motivators that can temporarily override objectivity) to gain the support of the Swing Leaners.</p>
+
+                <h2>Final Note</h2>
+
+                <p>Of course, this is just the foundation. Success is strongly influenced by factors like
+                    anti-incumbency, funding, endorsements, charisma, grassroots efforts, and countless other aspects.
+                </p>
+
+                <p>The reality is, elections are unpredictable, and even the smallest details can turn the tide in
+                    unexpected ways.</p>
+
+                <p>These are my observations — personal and perhaps unoriginal — but they reflect my ongoing exploration
+                    of political dynamics.</p>
+            </div>
+        </article>
+
+        <!-- Footer -->
+        <footer class="post-footer">
+            <a href="../index.html">← Back to home</a>
+        </footer>
+    </div>
+
+    <script>
+        // Theme sync from localStorage
+        (function () {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (!systemPrefersDark) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Pixel Grid with mobile support
+        (function () {
+            const grid = document.getElementById('pixel-grid');
+            if (!grid) return;
+            const cellSize = 12;
+            let cols, rows, cells = [];
+            let trail = [];
+            const trailLength = 8;
+            const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+            let isInteracting = false;
+            let ambientInterval = null;
+
+            function createGrid() {
+                cols = Math.ceil(window.innerWidth / cellSize);
+                rows = Math.ceil(window.innerHeight / cellSize);
+                grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+                grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+                grid.innerHTML = '';
+                cells = [];
+                for (let i = 0; i < cols * rows; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'pixel-cell';
+                    grid.appendChild(cell);
+                    cells.push(cell);
+                }
+                if (isMobile) startAmbient();
+            }
+
+            function getCellIndex(x, y) {
+                const col = Math.floor(x / cellSize);
+                const row = Math.floor(y / cellSize);
+                return (col >= 0 && col < cols && row >= 0 && row < rows) ? row * cols + col : -1;
+            }
+
+            function updateTrail() {
+                cells.forEach(c => c.classList.remove('active', 'trail-1', 'trail-2', 'trail-3', 'trail-4'));
+                trail.forEach((idx, i) => {
+                    if (idx >= 0 && idx < cells.length) {
+                        cells[idx].classList.remove('ambient');
+                        cells[idx].classList.add(i === 0 ? 'active' : i <= 2 ? 'trail-1' : i <= 4 ? 'trail-2' : i <= 6 ? 'trail-3' : 'trail-4');
+                    }
+                });
+            }
+
+            function handlePos(x, y) {
+                const idx = getCellIndex(x, y);
+                if (idx !== lastIdx && idx >= 0) {
+                    trail = trail.filter(i => i !== idx);
+                    trail.unshift(idx);
+                    if (trail.length > trailLength) trail.pop();
+                    updateTrail();
+                    lastIdx = idx;
+                }
+            }
+
+            function fadeOut() {
+                const fade = setInterval(() => {
+                    if (trail.length > 0) { trail.pop(); updateTrail(); }
+                    else clearInterval(fade);
+                }, 100);
+            }
+
+            function startAmbient() {
+                if (ambientInterval) return;
+                ambientInterval = setInterval(() => {
+                    if (isInteracting || cells.length === 0) return;
+                    for (let i = 0; i < 3; i++) {
+                        const idx = Math.floor(Math.random() * cells.length);
+                        cells[idx].classList.add('ambient');
+                        setTimeout(() => cells[idx].classList.remove('ambient'), Math.random() * 1000 + 500);
+                    }
+                }, 800);
+            }
+
+            let lastIdx = -1;
+            document.addEventListener('mousemove', e => handlePos(e.clientX, e.clientY));
+            document.addEventListener('mouseleave', fadeOut);
+            document.addEventListener('touchstart', e => {
+                isInteracting = true;
+                cells.forEach(c => c.classList.remove('ambient'));
+                handlePos(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+            document.addEventListener('touchmove', e => handlePos(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+            document.addEventListener('touchend', () => {
+                isInteracting = false;
+                fadeOut();
+                if (isMobile) setTimeout(() => { if (!isInteracting) startAmbient(); }, 1000);
+            });
+            window.addEventListener('resize', () => { trail = []; if (ambientInterval) { clearInterval(ambientInterval); ambientInterval = null; } createGrid(); });
+            createGrid();
+        })();
+    </script>
+</body>
+
+</html>
