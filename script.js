@@ -151,201 +151,144 @@ function initBentoGlow() {
 }
 
 /**
- * Pixel Grid Cursor/Touch Trail Effect
- * Desktop: follows cursor with trail
- * Mobile: follows touch with trail + ambient animation
+ * Pixel Grid - Canvas-based for smooth 60fps performance
  */
 function initPixelGrid() {
-    const grid = document.getElementById('pixel-grid');
-    if (!grid) return;
+    const container = document.getElementById('pixel-grid');
+    if (!container) return;
 
-    // Grid configuration
+    // Create canvas
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    container.appendChild(canvas);
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+
+    // Config
     const cellSize = 12;
-    let cols, rows, cells = [];
+    const trailLength = 12;
+    const glowColor = [59, 130, 246]; // RGB blue
     let trail = [];
-    const trailLength = 8;
+    let mouseX = -1, mouseY = -1;
+    let animationId = null;
 
     // Mobile detection
     const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     let isInteracting = false;
-    let ambientInterval = null;
+    let ambientCells = [];
 
-    // Create the grid
-    function createGrid() {
-        cols = Math.ceil(window.innerWidth / cellSize);
-        rows = Math.ceil(window.innerHeight / cellSize);
-
-        grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
-        grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
-
-        grid.innerHTML = '';
-        cells = [];
-
-        const totalCells = cols * rows;
-        for (let i = 0; i < totalCells; i++) {
-            const cell = document.createElement('div');
-            cell.className = 'pixel-cell';
-            grid.appendChild(cell);
-            cells.push(cell);
-        }
-
-        // Start ambient animation on mobile
-        if (isMobile) {
-            startAmbientAnimation();
-        }
+    function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
 
-    // Get cell index from position
-    function getCellIndex(x, y) {
-        const col = Math.floor(x / cellSize);
-        const row = Math.floor(y / cellSize);
-        if (col >= 0 && col < cols && row >= 0 && row < rows) {
-            return row * cols + col;
-        }
-        return -1;
-    }
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Clear all trail classes
-    function clearTrail() {
-        cells.forEach(cell => {
-            cell.classList.remove('active', 'trail-1', 'trail-2', 'trail-3', 'trail-4', 'ambient');
-        });
-    }
+        // Draw ambient cells (mobile)
+        if (isMobile && !isInteracting) {
+            ambientCells.forEach(cell => {
+                const alpha = cell.life / cell.maxLife;
+                ctx.fillStyle = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${alpha * 0.5})`;
+                ctx.fillRect(cell.x * cellSize, cell.y * cellSize, cellSize - 1, cellSize - 1);
+            });
 
-    // Update trail visualization
-    function updateTrail() {
-        // Clear only trail classes, not ambient
-        cells.forEach(cell => {
-            cell.classList.remove('active', 'trail-1', 'trail-2', 'trail-3', 'trail-4');
-        });
+            // Update ambient cells
+            ambientCells = ambientCells.filter(cell => {
+                cell.life -= 0.02;
+                return cell.life > 0;
+            });
 
-        trail.forEach((index, i) => {
-            if (index >= 0 && index < cells.length) {
-                const cell = cells[index];
-                cell.classList.remove('ambient'); // Remove ambient if in trail
-                if (i === 0) {
-                    cell.classList.add('active');
-                } else if (i <= 2) {
-                    cell.classList.add('trail-1');
-                } else if (i <= 4) {
-                    cell.classList.add('trail-2');
-                } else if (i <= 6) {
-                    cell.classList.add('trail-3');
-                } else {
-                    cell.classList.add('trail-4');
-                }
+            // Spawn new ambient cells
+            if (Math.random() < 0.1) {
+                const cols = Math.floor(canvas.width / cellSize);
+                const rows = Math.floor(canvas.height / cellSize);
+                ambientCells.push({
+                    x: Math.floor(Math.random() * cols),
+                    y: Math.floor(Math.random() * rows),
+                    life: 1,
+                    maxLife: 1
+                });
             }
+        }
+
+        // Draw trail
+        trail.forEach((pos, i) => {
+            const alpha = 1 - (i / trailLength);
+            const size = cellSize - 1;
+
+            // Glow effect for first few
+            if (i < 3) {
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${alpha})`;
+            } else {
+                ctx.shadowBlur = 0;
+            }
+
+            ctx.fillStyle = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${alpha * 0.8})`;
+            ctx.fillRect(pos.x * cellSize, pos.y * cellSize, size, size);
         });
+
+        ctx.shadowBlur = 0;
+        animationId = requestAnimationFrame(draw);
     }
 
-    // Handle position update (mouse or touch)
-    let lastIndex = -1;
-    function handlePosition(x, y) {
-        const index = getCellIndex(x, y);
+    function addToTrail(clientX, clientY) {
+        const col = Math.floor(clientX / cellSize);
+        const row = Math.floor(clientY / cellSize);
 
-        if (index !== lastIndex && index >= 0) {
-            trail = trail.filter(i => i !== index);
-            trail.unshift(index);
+        // Only add if different from last position
+        if (trail.length === 0 || trail[0].x !== col || trail[0].y !== row) {
+            trail.unshift({ x: col, y: row });
             if (trail.length > trailLength) {
                 trail.pop();
             }
-            updateTrail();
-            lastIndex = index;
         }
     }
 
-    // Fade out trail
-    function fadeOutTrail() {
-        const fadeInterval = setInterval(() => {
-            if (trail.length > 0) {
-                trail.pop();
-                updateTrail();
-            } else {
-                clearInterval(fadeInterval);
-            }
-        }, 100);
+    // Throttled mouse handler
+    let lastMove = 0;
+    function handleMove(x, y) {
+        const now = performance.now();
+        if (now - lastMove < 16) return; // ~60fps throttle
+        lastMove = now;
+        mouseX = x;
+        mouseY = y;
+        addToTrail(x, y);
     }
 
-    // Ambient animation for mobile (random pulses when not touching)
-    function startAmbientAnimation() {
-        if (ambientInterval) return;
-
-        ambientInterval = setInterval(() => {
-            if (isInteracting || cells.length === 0) return;
-
-            // Light up 2-4 random cells
-            const numCells = Math.floor(Math.random() * 3) + 2;
-            for (let i = 0; i < numCells; i++) {
-                const randomIndex = Math.floor(Math.random() * cells.length);
-                const cell = cells[randomIndex];
-
-                // Add ambient class
-                cell.classList.add('ambient');
-
-                // Remove after random delay
-                setTimeout(() => {
-                    cell.classList.remove('ambient');
-                }, Math.random() * 1000 + 500);
-            }
-        }, 800);
-    }
-
-    function stopAmbientAnimation() {
-        if (ambientInterval) {
-            clearInterval(ambientInterval);
-            ambientInterval = null;
-        }
-    }
-
-    // Mouse events (desktop)
-    document.addEventListener('mousemove', (e) => {
-        handlePosition(e.clientX, e.clientY);
-    });
-
+    // Mouse events
+    document.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY), { passive: true });
     document.addEventListener('mouseleave', () => {
-        fadeOutTrail();
+        // Fade out
+        const fade = setInterval(() => {
+            if (trail.length > 0) trail.pop();
+            else clearInterval(fade);
+        }, 50);
     });
 
-    // Touch events (mobile)
-    document.addEventListener('touchstart', (e) => {
+    // Touch events
+    document.addEventListener('touchstart', e => {
         isInteracting = true;
-        // Clear ambient cells when starting touch
-        cells.forEach(cell => cell.classList.remove('ambient'));
-
-        const touch = e.touches[0];
-        handlePosition(touch.clientX, touch.clientY);
+        ambientCells = [];
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    document.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        handlePosition(touch.clientX, touch.clientY);
+    document.addEventListener('touchmove', e => {
+        handleMove(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
     document.addEventListener('touchend', () => {
         isInteracting = false;
-        fadeOutTrail();
-
-        // Restart ambient animation after a delay
-        if (isMobile) {
-            setTimeout(() => {
-                if (!isInteracting) {
-                    startAmbientAnimation();
-                }
-            }, 1000);
-        }
+        const fade = setInterval(() => {
+            if (trail.length > 0) trail.pop();
+            else clearInterval(fade);
+        }, 50);
     });
 
-    // Handle window resize
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-            trail = [];
-            stopAmbientAnimation();
-            createGrid();
-        }, 200);
-    });
+    // Resize handler
+    window.addEventListener('resize', resize);
 
-    // Initialize grid
-    createGrid();
+    // Initialize
+    resize();
+    draw();
 }
