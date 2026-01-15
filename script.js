@@ -151,6 +151,7 @@ function initBentoGlow() {
 }
 
 /**
+<<<<<<< HEAD
  * Pixel Grid - Canvas-based for smooth 60fps performance
  */
 function initPixelGrid() {
@@ -170,10 +171,26 @@ function initPixelGrid() {
     let trail = [];
     let mouseX = -1, mouseY = -1;
     let animationId = null;
+=======
+ * Pixel Grid Cursor/Touch Trail Effect
+ * Desktop: follows cursor with trail
+ * Mobile: follows touch with trail + ambient animation
+ */
+function initPixelGrid() {
+    const grid = document.getElementById('pixel-grid');
+    if (!grid) return;
+
+    // Grid configuration
+    const cellSize = 12;
+    let cols, rows, cells = [];
+    let trail = [];
+    const trailLength = 8;
+>>>>>>> 35b8569 (Browser Company style redesign with pixel trail effect)
 
     // Mobile detection
     const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     let isInteracting = false;
+<<<<<<< HEAD
     let ambientCells = [];
 
     function resize() {
@@ -275,10 +292,164 @@ function initPixelGrid() {
 
     document.addEventListener('touchmove', e => {
         handleMove(e.touches[0].clientX, e.touches[0].clientY);
+=======
+    let ambientInterval = null;
+
+    // Create the grid
+    function createGrid() {
+        cols = Math.ceil(window.innerWidth / cellSize);
+        rows = Math.ceil(window.innerHeight / cellSize);
+
+        grid.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+        grid.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+
+        grid.innerHTML = '';
+        cells = [];
+
+        const totalCells = cols * rows;
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'pixel-cell';
+            grid.appendChild(cell);
+            cells.push(cell);
+        }
+
+        // Start ambient animation on mobile
+        if (isMobile) {
+            startAmbientAnimation();
+        }
+    }
+
+    // Get cell index from position
+    function getCellIndex(x, y) {
+        const col = Math.floor(x / cellSize);
+        const row = Math.floor(y / cellSize);
+        if (col >= 0 && col < cols && row >= 0 && row < rows) {
+            return row * cols + col;
+        }
+        return -1;
+    }
+
+    // Clear all trail classes
+    function clearTrail() {
+        cells.forEach(cell => {
+            cell.classList.remove('active', 'trail-1', 'trail-2', 'trail-3', 'trail-4', 'ambient');
+        });
+    }
+
+    // Update trail visualization
+    function updateTrail() {
+        // Clear only trail classes, not ambient
+        cells.forEach(cell => {
+            cell.classList.remove('active', 'trail-1', 'trail-2', 'trail-3', 'trail-4');
+        });
+
+        trail.forEach((index, i) => {
+            if (index >= 0 && index < cells.length) {
+                const cell = cells[index];
+                cell.classList.remove('ambient'); // Remove ambient if in trail
+                if (i === 0) {
+                    cell.classList.add('active');
+                } else if (i <= 2) {
+                    cell.classList.add('trail-1');
+                } else if (i <= 4) {
+                    cell.classList.add('trail-2');
+                } else if (i <= 6) {
+                    cell.classList.add('trail-3');
+                } else {
+                    cell.classList.add('trail-4');
+                }
+            }
+        });
+    }
+
+    // Handle position update (mouse or touch)
+    let lastIndex = -1;
+    function handlePosition(x, y) {
+        const index = getCellIndex(x, y);
+
+        if (index !== lastIndex && index >= 0) {
+            trail = trail.filter(i => i !== index);
+            trail.unshift(index);
+            if (trail.length > trailLength) {
+                trail.pop();
+            }
+            updateTrail();
+            lastIndex = index;
+        }
+    }
+
+    // Fade out trail
+    function fadeOutTrail() {
+        const fadeInterval = setInterval(() => {
+            if (trail.length > 0) {
+                trail.pop();
+                updateTrail();
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 100);
+    }
+
+    // Ambient animation for mobile (random pulses when not touching)
+    function startAmbientAnimation() {
+        if (ambientInterval) return;
+
+        ambientInterval = setInterval(() => {
+            if (isInteracting || cells.length === 0) return;
+
+            // Light up 2-4 random cells
+            const numCells = Math.floor(Math.random() * 3) + 2;
+            for (let i = 0; i < numCells; i++) {
+                const randomIndex = Math.floor(Math.random() * cells.length);
+                const cell = cells[randomIndex];
+
+                // Add ambient class
+                cell.classList.add('ambient');
+
+                // Remove after random delay
+                setTimeout(() => {
+                    cell.classList.remove('ambient');
+                }, Math.random() * 1000 + 500);
+            }
+        }, 800);
+    }
+
+    function stopAmbientAnimation() {
+        if (ambientInterval) {
+            clearInterval(ambientInterval);
+            ambientInterval = null;
+        }
+    }
+
+    // Mouse events (desktop)
+    document.addEventListener('mousemove', (e) => {
+        handlePosition(e.clientX, e.clientY);
+    });
+
+    document.addEventListener('mouseleave', () => {
+        fadeOutTrail();
+    });
+
+    // Touch events (mobile)
+    document.addEventListener('touchstart', (e) => {
+        isInteracting = true;
+        // Clear ambient cells when starting touch
+        cells.forEach(cell => cell.classList.remove('ambient'));
+
+        const touch = e.touches[0];
+        handlePosition(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        handlePosition(touch.clientX, touch.clientY);
+>>>>>>> 35b8569 (Browser Company style redesign with pixel trail effect)
     }, { passive: true });
 
     document.addEventListener('touchend', () => {
         isInteracting = false;
+<<<<<<< HEAD
         const fade = setInterval(() => {
             if (trail.length > 0) trail.pop();
             else clearInterval(fade);
@@ -291,4 +462,31 @@ function initPixelGrid() {
     // Initialize
     resize();
     draw();
+=======
+        fadeOutTrail();
+
+        // Restart ambient animation after a delay
+        if (isMobile) {
+            setTimeout(() => {
+                if (!isInteracting) {
+                    startAmbientAnimation();
+                }
+            }, 1000);
+        }
+    });
+
+    // Handle window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            trail = [];
+            stopAmbientAnimation();
+            createGrid();
+        }, 200);
+    });
+
+    // Initialize grid
+    createGrid();
+>>>>>>> 35b8569 (Browser Company style redesign with pixel trail effect)
 }
