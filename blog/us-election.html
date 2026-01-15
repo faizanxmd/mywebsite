@@ -144,12 +144,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
-=======
-    <!-- Glowing Border -->
-    <div class="glow-border"></div>
-
->>>>>>> 35b8569 (Browser Company style redesign with pixel trail effect)
     <!-- Pixel Grid -->
     <div class="pixel-grid" id="pixel-grid"></div>
 
@@ -276,65 +270,6 @@
             localStorage.setItem('theme', newTheme);
         });
 
-<<<<<<< HEAD
-        // Pixel Grid - Canvas-based for 60fps
-        (function () {
-            const container = document.getElementById('pixel-grid');
-            if (!container) return;
-
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            container.appendChild(canvas);
-            canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
-
-            const cellSize = 12;
-            const trailLength = 12;
-            const glowColor = [59, 130, 246];
-            let trail = [];
-            const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-            let isInteracting = false;
-            let ambientCells = [];
-
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // No ambient animation on blog page - just the trail
-                trail.forEach((pos, i) => {
-                    const alpha = 1 - (i / trailLength);
-                    if (i < 3) { ctx.shadowBlur = 8; ctx.shadowColor = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${alpha})`; }
-                    else { ctx.shadowBlur = 0; }
-                    ctx.fillStyle = `rgba(${glowColor[0]}, ${glowColor[1]}, ${glowColor[2]}, ${alpha * 0.8})`;
-                    ctx.fillRect(pos.x * cellSize, pos.y * cellSize, cellSize - 1, cellSize - 1);
-                });
-                ctx.shadowBlur = 0;
-                requestAnimationFrame(draw);
-            }
-
-            let lastMove = 0;
-            function handleMove(x, y) {
-                if (performance.now() - lastMove < 16) return;
-                lastMove = performance.now();
-                const col = Math.floor(x / cellSize), row = Math.floor(y / cellSize);
-                if (trail.length === 0 || trail[0].x !== col || trail[0].y !== row) {
-                    trail.unshift({ x: col, y: row });
-                    if (trail.length > trailLength) trail.pop();
-                }
-            }
-
-            document.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY), { passive: true });
-            document.addEventListener('mouseleave', () => { const f = setInterval(() => { if (trail.length > 0) trail.pop(); else clearInterval(f); }, 50); });
-            document.addEventListener('touchstart', e => { isInteracting = true; ambientCells = []; handleMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-            document.addEventListener('touchmove', e => handleMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-            document.addEventListener('touchend', () => { isInteracting = false; const f = setInterval(() => { if (trail.length > 0) trail.pop(); else clearInterval(f); }, 50); });
-            window.addEventListener('resize', resize);
-            resize();
-            draw();
-=======
         // Pixel Grid with mobile support
         (function () {
             const grid = document.getElementById('pixel-grid');
@@ -425,7 +360,6 @@
             });
             window.addEventListener('resize', () => { trail = []; if (ambientInterval) { clearInterval(ambientInterval); ambientInterval = null; } createGrid(); });
             createGrid();
->>>>>>> 35b8569 (Browser Company style redesign with pixel trail effect)
         })();
     </script>
 </body>
